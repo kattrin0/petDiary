@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.tetstviews"
+    namespace = "com.example.petDiary"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.tetstviews"
+        applicationId = "com.example.petDiary"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -34,6 +34,18 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+    }
+    sourceSets {
+        getByName("main") {
+            res.srcDirs(
+                "src/main/res-main",
+                "src/main/res-screen/home",
+                "src/main/res-screen/calendar",
+                "src/main/res-screen/map",
+                "src/main/res-screen/profile",
+                "src/main/res"
+            )
+        }
     }
 }
 

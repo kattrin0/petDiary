@@ -36,11 +36,11 @@
         <item name="colorAccent">@color/orangeLight</item>
     </style>
     <!-- //////////////////////////////////////////////////////////////////////////////////-->
-    <style name="Base.Theme.TetstViews" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.petDiary" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
 
-    <style name="Theme.TetstViews" parent="Base.Theme.TetstViews" />
+    <style name="Theme.petDiary" parent="Base.Theme.petDiary" />
 </resources>
