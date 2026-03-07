@@ -173,22 +173,6 @@ class ProfileFragment : Fragment() {
                 btnEdit.visibility = View.GONE
             }
         })
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                btnSave.isEnabled = false
-                btnSave.text = "Сохранение..."
-            } else {
-                btnSave.isEnabled = true
-                btnSave.text = "Сохранить"
-            }
-        }
-
-        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
-            errorMessage?.let {
-                Snackbar.make(requireView(), it, Snackbar.LENGTH_LONG).show()
-                viewModel.clearError()
-            }
-        }
     }
 
     private fun updateProfileUI(profile: PetProfile) {

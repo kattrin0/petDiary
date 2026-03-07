@@ -58,6 +58,16 @@ class CalendarFragment : Fragment() {
         setupObservers()
         setupAdapter()
         setupClickListeners()
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            // Можно показать/скрыть ProgressBar
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                viewModel.clearError()
+            }
+        }
     }
 
     private fun initViews(view: View) {
@@ -187,8 +197,10 @@ class CalendarFragment : Fragment() {
         calendarView.maxDate = maxCal.timeInMillis
 
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val cal = Calendar.getInstance()
-            cal.set(year, month, dayOfMonth)
+            val cal = Calendar.getInstance().apply {
+                set(year, month, dayOfMonth, 0, 0, 0)  // Обнуляем время
+                set(Calendar.MILLISECOND, 0)
+            }
             selectedDateMillis = cal.timeInMillis
             selectedDateString = formatDate(selectedDateMillis)
         }

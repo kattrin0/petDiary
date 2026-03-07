@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
+    // Выбираем репозиторий в зависимости от того, залогинен ли пользователь
     private val repository: IPetProfileRepository = if (FirebaseAuth.getInstance().currentUser != null) {
         FirestorePetProfileRepository()
     } else {

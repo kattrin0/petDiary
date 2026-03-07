@@ -49,10 +49,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadTodayEvents() {
-        // Эта функция не suspend, поэтому корутина не нужна
-        val events = eventsRepository.getTodayEvents()
-            .sortedBy { it.timeHour * 60 + it.timeMinute }
-        _todayEvents.value = events
+        viewModelScope.launch {
+            try {
+                val events = eventsRepository.getTodayEvents()
+                    .sortedBy { it.timeHour * 60 + it.timeMinute }
+                _todayEvents.value = events
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun refreshData() {

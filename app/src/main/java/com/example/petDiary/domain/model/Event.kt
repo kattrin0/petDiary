@@ -9,6 +9,7 @@ data class Event(
     val dateMillis: Long = 0L,
     val timeHour: Int = 0,
     val timeMinute: Int = 0,
-    var isCompleted: Boolean = false
+    var isCompleted: Boolean = false,
+    val userId: String? = null
 )
 

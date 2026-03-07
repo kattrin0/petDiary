@@ -44,5 +44,14 @@
     </style>
 
 
-    <style name="Theme.petDiary" parent="Base.Theme.petDiary" />
+    <style name="Theme.petDiary" parent="Base.Theme.petDiary">
+
+    <!--  <item name="android:statusBarColor">@color/greenPrimary</item> почему то не ставится зеленый цвет -->
+    <item name="android:windowLightStatusBar">true</item>
+
+    <!-- Убедитесь, что эти атрибуты НЕ установлены -->
+    <!-- <item name="android:windowFullscreen">true</item> -->
+    <!-- <item name="android:windowTranslucentStatus">true</item> -->
+</style>
+
 </resources>
