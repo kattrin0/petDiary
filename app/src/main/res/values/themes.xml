@@ -3,7 +3,9 @@
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/greenPrimary</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_paw0</item>
-        <item name="postSplashScreenTheme">@style/Base.Theme.TetstViews</item>
+        <!-- После экрана загрузки переключаемся на основную тему приложения
+             (она наследуется от AppCompat через Material-компоненты) -->
+        <item name="postSplashScreenTheme">@style/Theme.petDiary</item>
     </style>
     <!-- //////////////////////////////////////////////////////////////////////////////////-->
     <!-- Стиль для TextInputLayout  -->
@@ -36,7 +38,7 @@
         <item name="colorAccent">@color/orangeLight</item>
     </style>
     <!-- //////////////////////////////////////////////////////////////////////////////////-->
-    <style name="Base.Theme.petDiary" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.petDiary" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>

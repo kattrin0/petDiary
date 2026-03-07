@@ -1,97 +1,107 @@
 package com.example.petDiary.ui
 
-import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.Observer
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.petDiary.R
-import com.example.petDiary.ui.viewmodel.MainViewModel
+import com.example.petDiary.ui.SettingsDialog
+import com.example.petDiary.ui.fragments.AuthChoiceFragment
+import com.example.petDiary.ui.viewmodel.AuthViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.yandex.mapkit.MapKitFactory
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var authViewModel: AuthViewModel
     private lateinit var toolbar: Toolbar
-    private lateinit var viewModel: MainViewModel
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Инициализация ViewModel
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        
-        // Применяем тему из ViewModel
-        viewModel.themeMode.observe(this, Observer { mode ->
-            AppCompatDelegate.setDefaultNightMode(mode)
-        })
-        val initialMode = viewModel.getThemeMode()
-        AppCompatDelegate.setDefaultNightMode(initialMode)
-
-        installSplashScreen()
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
-        MapKitFactory.setApiKey("c252d799-fd64-49c8-8552-3a12957b7cff")
         setContentView(R.layout.activity_main)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
-            insets
-        }
-
         toolbar = findViewById(R.id.toolbar)
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
-        // Обработчик нажатия на элементы меню
-        toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.action_settings -> {
-                    showThemeDialog()
-                    true
-                }
-                else -> false
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Pet Diary"
+
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        observeAuthState()
+        handleSignInLink(intent)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                showSettingsDialog()
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
+    }
 
-        // Настройка BOTTOM NAVIGATION MENU
-        val btnNavView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        val controller = findNavController(R.id.fragmentContainerView2)
-        btnNavView.setupWithNavController(controller)
+    private fun showSettingsDialog() {
+        val settingsDialog = SettingsDialog()
+        settingsDialog.show(supportFragmentManager, SettingsDialog.TAG)
+    }
 
-        // Настройка TOOLBAR
-        controller.addOnDestinationChangedListener { _, destination, _ ->
-            val label = destination.label
-            if (label != null) {
-                toolbar.title = label
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleSignInLink(intent)
+    }
+
+    private fun observeAuthState() {
+        authViewModel.isAuthenticated.observe(this) { isAuthenticated ->
+            if (isAuthenticated) {
+                setAuthBarsVisible(true)
+                navigateToHome()
+            } else {
+                setAuthBarsVisible(false)
+                navigateToAuth()
             }
         }
     }
 
-    private fun showThemeDialog() {
-        val themes = arrayOf("Светлая тема", "Тёмная тема", "Системная")
-        val themeModes = viewModel.getThemeModes()
+    private fun setAuthBarsVisible(visible: Boolean) {
+        toolbar.visibility = if (visible) android.view.View.VISIBLE else android.view.View.GONE
+        bottomNavigationView.visibility = if (visible) android.view.View.VISIBLE else android.view.View.GONE
+    }
 
-        val currentMode = viewModel.themeMode.value ?: AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        var selectedIndex = themeModes.indexOf(currentMode).coerceAtLeast(0)
-        if (selectedIndex == -1) selectedIndex = 2
+    private fun navigateToHome() {
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        val navHostFragment = NavHostFragment.create(R.navigation.nav_fragment)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView2, navHostFragment)
+            .commit()
+        supportFragmentManager.executePendingTransactions()
+        (supportFragmentManager.findFragmentById(R.id.fragmentContainerView2) as? NavHostFragment)
+            ?.navController
+            ?.let { bottomNavigationView.setupWithNavController(it) }
+    }
 
-        AlertDialog.Builder(this)
-            .setTitle("Выберите тему")
-            .setSingleChoiceItems(themes, selectedIndex) { _, which ->
-                selectedIndex = which
-            }
-            .setPositiveButton("Применить") { _, _ ->
-                val newMode = themeModes[selectedIndex]
-                viewModel.saveThemeMode(newMode)
-            }
-            .setNegativeButton("Отмена", null)
-            .show()
+    private fun navigateToAuth() {
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView2, AuthChoiceFragment.newInstance())
+            .commit()
+    }
+
+    private fun handleSignInLink(intent: Intent?) {
+        intent?.data?.toString()?.let { link ->
+            authViewModel.handleSignInLink(link)
+        }
     }
 }
-

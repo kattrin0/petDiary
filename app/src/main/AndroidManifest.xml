@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
+        android:name=".PetDiaryApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -28,21 +29,33 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.petDiary">
+
+        <!-- Добавьте мета-данные для Яндекс.Карт -->
+        <meta-data
+            android:name="com.yandex.maps.ApiKey"
+            android:value="c252d799-fd64-49c8-8552-3a12957b7cff" />
+
         <activity
             android:name=".ui.MainActivity"
-            android:theme="@style/Theme.App.Starting"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="petdiary-d6042.firebaseapp.com" />
+            </intent-filter>
         </activity>
+
         <!-- Receiver для уведомлений -->
         <receiver
             android:name=".NotificationReceiver"
             android:exported="false"/>
-
 
         <provider
             android:name="androidx.core.content.FileProvider"

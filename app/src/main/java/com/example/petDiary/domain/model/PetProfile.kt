@@ -10,6 +10,7 @@ data class PetProfile(
     val chipNumber: String = "",
     val isSterilized: Boolean = false,
     val notes: String = "",
-    val photoPath: String? = null
+    val photoPath: String? = null,
+    val userId: String? = null
 )
 
