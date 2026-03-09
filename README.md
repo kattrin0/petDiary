@@ -1,7 +1,1 @@
 Мобильное приложение «Pet Diary» позволяет пользователям создавать детальные профили своих питомцев, планировать связанные с ними события с напоминаниями и быстро находить необходимые зоо-услуги на карте.
-
-Основные экраны:
-![i (8)](https://github.com/user-attachments/assets/a624168d-3b12-4106-ba21-3aa5e3c9acbe)
-![i (10)](https://github.com/user-attachments/assets/1ca770db-ad39-4d87-91cb-050808bc2442)
-![i (12)](https://github.com/user-attachments/assets/cb8b6002-ea8f-419a-97ce-83e0ac1c3faa)
-![i (9)](https://github.com/user-attachments/assets/cfc941e0-f6d9-4ae7-97fa-4eafaecd2628)
